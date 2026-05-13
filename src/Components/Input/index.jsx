@@ -1,5 +1,5 @@
-const Input = () => {
- 
+const Input = ([hacerConsulta]) => {
+ const [valor, setValor] = useState()
 return(
 <div>
 <input
@@ -8,7 +8,7 @@ return(
         placeholder="Busca una Pelicula"
         onKeyDown={(e) => {
         if (e.key === "Enter") {
-            hacerConsulta();
+            hacerConsulta(valor);
         }
         }}
       />

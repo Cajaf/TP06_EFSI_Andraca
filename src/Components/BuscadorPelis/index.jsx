@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import "./BuscadorPelis.css"
+import Input from '../Input';
 const BuscadorPelis = () => {
      const [datos, setdatos] = useState([])
      const [datosCompletos, setdatosCompletos] = useState([]) 
@@ -14,8 +15,11 @@ const BuscadorPelis = () => {
         <img src={datos[0]}/>
         <p>{datos[2]}</p>
         <p>{datos[3]}</p>
+        
 
-         <button
+        <Input hacerConsulta ="hacerConsulta()"/>
+
+        <button
         className="boton"
         onClick={() => setMostrarCard(!mostrarCard)}
         >
