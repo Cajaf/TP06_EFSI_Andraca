@@ -4,13 +4,17 @@ import Input from '../Input';
 import axios from "axios";
 const BuscadorPelis = () => {
      const [datos, setdatos] = useState([])
+     const [info, setInfo] = useState([])
      const [datosCompletos, setdatosCompletos] = useState([]) 
     const [mostrarCard, setMostrarCard] = useState(false);
     async function hacerConsulta(titulo) {
     try {
+      setInfo("Cargando")
+      setdatos([])
+      setdatosCompletos([])
       const response = await axios.get("http://www.omdbapi.com/?apikey=8f253ef8&t=" + titulo);
-
       if (response.data.Response === "True") {
+        setInfo("")
          setdatos([
             response.data.Poster,
             response.data.Title,
@@ -29,7 +33,7 @@ const BuscadorPelis = () => {
           localStorage.setItem('titulo', JSON.stringify(response.data.Title));
       }
     } catch (error) {
-      setdatos(["Pelicula no encontrada"])
+      setInfo("Peli no encontrada")
     }
   }
       const titulo = JSON.parse(localStorage.getItem('titulo'));
@@ -39,7 +43,7 @@ const BuscadorPelis = () => {
     }, [])
   return (
     <div>
-        
+        <p>{info}</p>
       
         <h2>{datos[1]}</h2>
         <img src={datos[0]}/>
