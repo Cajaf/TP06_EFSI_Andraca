@@ -29,6 +29,7 @@ const BuscadorPelis = () => {
           localStorage.setItem('titulo', JSON.stringify(response.data.Title));
       }
     } catch (error) {
+      setdatos(["Pelicula no encontrada"])
     }
   }
       const titulo = JSON.parse(localStorage.getItem('titulo'));
