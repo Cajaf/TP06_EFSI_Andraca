@@ -1,23 +1,58 @@
 import { useEffect, useState } from 'react'
 import "./BuscadorPelis.css"
 import Input from '../Input';
+import axios from "axios";
 const BuscadorPelis = () => {
+    const [cargado, setCargado] = useState(false)
      const [datos, setdatos] = useState([])
      const [datosCompletos, setdatosCompletos] = useState([]) 
-     const hacerConsulta = () => {
     const [mostrarCard, setMostrarCard] = useState(false);
-     }
+    async function hacerConsulta(titulo) {
+    try {
+      const response = await axios.get("http://www.omdbapi.com/?apikey=8f253ef8&t=" + titulo);
+
+      if (response.data.Response === "True") {
+         setdatos([
+            response.data.Poster,
+            response.data.Title,
+            response.data.Year,
+            response.data.Type
+          ]);
+          setdatosCompletos([
+            response.data.Director,      
+            response.data.Actors,       
+            response.data.Plot,          
+            response.data.Runtime,       
+            response.data.Language,      
+            response.data.Country,       
+            response.data.imdbRating
+          ])
+
+      }
+    } catch (error) {
+    }
+  }
+  useEffect(() => {
+  if(cargado){
+        localStorage.setItem('titulo', JSON.stringify(response.data.Title));
+        setCargado(!cargado)
+      }   
+    }, [datos])
+
+     useEffect(() => {
+        hacerConsulta(JSON.parse(localStorage.getItem('titulo')))
+    }, [])
   return (
     <div>
         
-      <button onClick={hacerConsulta}>Buscar</button>
+      
         <h2>{datos[1]}</h2>
         <img src={datos[0]}/>
         <p>{datos[2]}</p>
         <p>{datos[3]}</p>
         
 
-        <Input hacerConsulta ="hacerConsulta()"/>
+        <Input hacerConsulta ={hacerConsulta}/>
 
         <button
         className="boton"
@@ -38,6 +73,7 @@ const BuscadorPelis = () => {
             <p>{datosCompletos[3]}</p>
             <p>{datosCompletos[4]}</p>
             <p>{datosCompletos[5]}</p>
+            <p>{datosCompletos[6]}</p>
         </div>
       )}
     

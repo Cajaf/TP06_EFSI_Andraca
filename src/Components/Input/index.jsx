@@ -1,5 +1,6 @@
-const Input = ([hacerConsulta]) => {
- const [valor, setValor] = useState()
+import { useEffect, useState } from 'react'
+const Input = ({hacerConsulta}) => {
+ const [valor, setValor] = useState("")
 return(
 <div>
 <input
@@ -12,6 +13,7 @@ return(
         }
         }}
       />
+     <button onClick={() => hacerConsulta(valor)}>Buscar</button>
 </div>
 );
 }

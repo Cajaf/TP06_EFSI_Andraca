@@ -5,6 +5,7 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import AdministradorCitas from './Components/AdministradorCitas'
 import Form from './Components/Form'
+import BuscadorPelis from './Components/BuscadorPelis'
 
 function App() {
   const [recarga, setRecarga] = useState(false)
@@ -21,13 +22,10 @@ function App() {
   },[])
 
   return (
-    <div id="root">
-      <h1>ADMINISTRADOR DE PACIENTES</h1>
-      <div className="container"></div>
-          <div className="row">
-          <Form citas = {citas} setCitas = {setcitas}/>
-          <AdministradorCitas citas = {citas} setCitas = {setcitas}/>
-      </div>
+    <div>
+      <h1>Buscador de pelis</h1>
+
+      <BuscadorPelis/>
     </div>
   );
 }
