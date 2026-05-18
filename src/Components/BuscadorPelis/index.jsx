@@ -3,7 +3,6 @@ import "./BuscadorPelis.css"
 import Input from '../Input';
 import axios from "axios";
 const BuscadorPelis = () => {
-    const [cargado, setCargado] = useState(false)
      const [datos, setdatos] = useState([])
      const [datosCompletos, setdatosCompletos] = useState([]) 
     const [mostrarCard, setMostrarCard] = useState(false);
@@ -27,20 +26,15 @@ const BuscadorPelis = () => {
             response.data.Country,       
             response.data.imdbRating
           ])
-
+          localStorage.setItem('titulo', JSON.stringify(response.data.Title));
       }
     } catch (error) {
     }
   }
-  useEffect(() => {
-  if(cargado){
-        localStorage.setItem('titulo', JSON.stringify(response.data.Title));
-        setCargado(!cargado)
-      }   
-    }, [datos])
-
+      const titulo = JSON.parse(localStorage.getItem('titulo'));
      useEffect(() => {
-        hacerConsulta(JSON.parse(localStorage.getItem('titulo')))
+      if(titulo != null)
+        hacerConsulta(titulo)
     }, [])
   return (
     <div>
