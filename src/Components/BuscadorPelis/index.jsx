@@ -1,38 +1,47 @@
 import { useEffect, useState } from 'react'
 import "./BuscadorPelis.css"
 import Input from '../Input';
+import Pelis from '../Pelis';
 import axios from "axios";
 const BuscadorPelis = () => {
      const [datos, setdatos] = useState([])
      const [info, setInfo] = useState([])
-     const [datosCompletos, setdatosCompletos] = useState([]) 
-    const [mostrarCard, setMostrarCard] = useState(false);
+    
     async function hacerConsulta(titulo) {
     try {
       setInfo("Cargando")
       setdatos([])
-      setdatosCompletos([])
-      const response = await axios.get("http://www.omdbapi.com/?apikey=8f253ef8&t=" + titulo);
-      if (response.data.Response === "True") {
-        setInfo("")
-         setdatos([
-            response.data.Poster,
-            response.data.Title,
-            response.data.Year,
-            response.data.Type
-          ]);
-          setdatosCompletos([
-            response.data.Director,      
-            response.data.Actors,       
-            response.data.Plot,          
-            response.data.Runtime,       
-            response.data.Language,      
-            response.data.Country,       
-            response.data.imdbRating
-          ])
-          localStorage.setItem('titulo', JSON.stringify(response.data.Title));
+      const response = await axios.get("http://www.omdbapi.com/?apikey=8f253ef8&s=" + titulo);
+       const lista = response.data.Search; 
+
+      const detallesPromises = lista.map((item) =>
+        axios.get(
+          `http://www.omdbapi.com/?apikey=8f253ef8&i=${item.imdbID}`
+        )
+      );
+
+      const detallesResponses = await Promise.all(detallesPromises);
+
+
+      const datosFinales = detallesResponses.map((res) => ({
+        Poster: res.data.Poster,
+        Title: res.data.Title,
+        Year: res.data.Year,
+        Type: res.data.Type,
+        Director: res.data.Director,
+        Actors: res.data.Actors,
+        Plot: res.data.Plot,
+        Runtime: res.data.Runtime,
+        Language: res.data.Language,
+        Country: res.data.Country,
+        imdbRating: res.data.imdbRating,
+      }));
+
+      setdatos(datosFinales);
+          
+          localStorage.setItem('titulo', JSON.stringify(titulo));
       }
-    } catch (error) {
+     catch (error) {
       setInfo("Peli no encontrada")
     }
   }
@@ -42,39 +51,19 @@ const BuscadorPelis = () => {
         hacerConsulta(titulo)
     }, [])
   return (
-    <div>
+    
+        <div>
         <p>{info}</p>
-      
-        <h2>{datos[1]}</h2>
-        <img src={datos[0]}/>
-        <p>{datos[2]}</p>
-        <p>{datos[3]}</p>
-        
 
         <Input hacerConsulta ={hacerConsulta}/>
 
-        <button
-        className="boton"
-        onClick={() => setMostrarCard(!mostrarCard)}
-        >
-        {mostrarCard ? "Cerrar Card" : "Abrir Card"}
-      </button>
 
-      {mostrarCard && (
-        <div className="card">
-            <h2>{datos[1]}</h2>
-            <img src={datos[0]}/>
-            <p>{datos[2]}</p>
-            <p>{datos[3]}</p>
-            <p>{datosCompletos[0]}</p>
-            <p>{datosCompletos[1]}</p>
-            <p>{datosCompletos[2]}</p>
-            <p>{datosCompletos[3]}</p>
-            <p>{datosCompletos[4]}</p>
-            <p>{datosCompletos[5]}</p>
-            <p>{datosCompletos[6]}</p>
-        </div>
-      )}
+        <div className="lista-pelis">
+        {datos.map((pelicula, index) => (
+          <Pelis key={index} datos={pelicula} />
+        ))}
+      </div>
+       
     
     </div>
   );
